@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head>
+		<title>CatCollectr</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.css">
+  </head>
+  <body>
+  <h1>CatCollectr</h1>
+  <hr />
+  {% block content %}
+  {% for cat in cats %}
+  <a href="/{{cat.id}}">
+	   <p>Name: {{ cat.name }}</p>
+  </a>
+  <a href="/user/{{cat.user.username}}">
+    <p>Adopted By: {{cat.user.username }}</p>
+  </a>
+	{% if cat.age > 0 %}
+    <p>Age: {{ cat.age }}</p>
+	{% else %}
+    <p>Age: Kitten</p>
+	{% endif %}
+	<hr />
+  {% endfor %}
+  <form action="post_url/" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Submit" />
+  </form>
+  {% endblock %}
+  {% if user.is_authenticated %}
+    <a  href="{% url 'profile' user.username %}">Hello, {{ user.username }}!</a> |
+    <a  href="{% url 'logout' %}">Logout</a>
+  {% else %}
+    <a  href="{% url 'login' %}">Login</a>
+  {% endif %}
+  <footer>All Rights Reserved, CatCollectr 2018</footer>
+  </body>
